@@ -20,8 +20,8 @@ class MeetingRoomService:
         document = self.repository.get_timeslots(cluster_id)
         if not document:
             raise HTTPException(status_code=404, detail="Cluster not found")
-
-        building = next((b for b in document.get("Buildings", []) if b.get("id") == building_id), None)
+        
+        building = next((b for b in document.get("Buildings", []) if str(b.get("id")) == str(building_id)), None)
 
         if not building:
             raise HTTPException(status_code=404, detail="Building not found")
