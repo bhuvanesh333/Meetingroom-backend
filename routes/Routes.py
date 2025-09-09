@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-
+from routes.MeeQ_resourse.Cluster_AdminAuthResource import cluster_admin_auth_resourse
 
 class IncludeRoutes:
 
@@ -8,4 +8,4 @@ class IncludeRoutes:
         self.includeRoutes()
     
     def includeRoutes(self):
-        pass
+         self.app.include_router(cluster_admin_auth_resourse, prefix="/api/cluserAdminAuth", tags=["ClusterAdmin"])

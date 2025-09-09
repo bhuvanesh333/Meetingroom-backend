@@ -17,7 +17,6 @@ try:
         allow_credentials=True,
         allow_methods=["*"],
         allow_headers=["*"],
-        
     )
     logging.info("CORS middleware added successfully.")
 except Exception as e:
@@ -27,7 +26,3 @@ except Exception as e:
 class Initialize:
     IncludeRoutes(app)
 
-@app.on_event("shutdown")
-async def shutdown_event():
-    # Clean up resources here
-    pass

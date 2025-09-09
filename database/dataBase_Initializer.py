@@ -9,10 +9,12 @@ MONGO_PORT = 27017
 MONGO_DB = "MeetingRoom"
 #------------------------------------------------------------------------
 
-MONGO_URI = "mongodb://localhost:27017/"
+MONGO_URI = "mongodb+srv://bhuvanesh:getin@meetingroom-cluster.mzsu5gs.mongodb.net/"
 client = MongoClient(MONGO_URI)
 
 database = client.MeetingRoom
+
+Clusterroom_auth_collection = database.ClusterRoom_AUTH
 Meetingroom_auth_collection = database.MeetingRoom_AUTH
 Meetingroom_collection = database.MeetingRoom
 
