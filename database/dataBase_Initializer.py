@@ -15,7 +15,7 @@ client = MongoClient(MONGO_URI)
 database = client.MeetingRoom
 
 Clusterroom_auth_collection = database.ClusterRoom_AUTH
-Meetingroom_auth_collection = database.MeetingRoom_AUTH
-Meetingroom_collection = database.MeetingRoom
+Conferenceroom_auth_collection = database.ConferenceRoom_AUTH
+ConferenceRoom_collection = database.ConferenceRoom
 
 #------------------------------------------------------------------------
