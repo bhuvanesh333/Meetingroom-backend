@@ -2,7 +2,7 @@
 
 import random
 from fastapi import Depends, HTTPException, status
-from repository.MeeQ_repository.Cluster_PageRepository import ClusterPageRepository
+from repository.MeeQ_repository.Cluster_AdminPageRepository import ClusterPageRepository
 from schema.clusterAdminPageSchema import ConferenceRoom, RoomStatusUpdate
 from schema.commonSchema import APIResponse
 
@@ -21,7 +21,8 @@ class ClusterAdminPageService:
             "ConferenceRoomName": conferenceRoom_data.ConferenceRoomName,
             "Capacity": conferenceRoom_data.Capacity,
             "isAvailable": conferenceRoom_data.isAvailable,
-            "imageUrl":conferenceRoom_data.imageUrl
+            "imageUrl":conferenceRoom_data.imageUrl,
+            "timeSlots":[]
         }
 
         result = self.clusterPageRepository._set_conference_room_by_fields(conference_room_dict, Cluster_ID)
@@ -79,7 +80,8 @@ class ClusterAdminPageService:
             "ConferenceRoomName": conferenceRoom_data.ConferenceRoomName,
             "Capacity": conferenceRoom_data.Capacity,
             "isAvailable": conferenceRoom_data.isAvailable,
-            "imageUrl":conferenceRoom_data.imageUrl
+            "imageUrl":conferenceRoom_data.imageUrl,
+            "timeSlots":[]
         }
 
         result = self.clusterPageRepository._update_conference_room_by_fields(conference_room_dict, Cluster_ID)

@@ -73,6 +73,19 @@ class ClusterAdminAuthService:
                     detail="Failed to create cluster admin"
                 )
             
+            creds_dict = {
+                "Cluster_ID": signup_credential.clusterId,
+                "Buildings":[]
+            }
+
+            result=self.clusterAdminRepository.create_conference_room(creds_dict)
+
+            if not result:
+                raise HTTPException(
+                    status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                    detail="Failed to create clustermeetingroom"
+                )
+            
             return APIResponse(
                 message="Signup successful",
                 error=""
