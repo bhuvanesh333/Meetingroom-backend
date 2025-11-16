@@ -15,14 +15,14 @@ class ClusterAdminPageService:
     def add_cluster_conferenceroom(self, conferenceRoom_data: ConferenceRoom, Cluster_ID: str) -> APIResponse:
         conference_room_dict = {
             "id": self.gen_random_id(Cluster_ID),
-            "BuildingName": conferenceRoom_data.BuildingName,
-            "Floor": conferenceRoom_data.Floor,
-            "ConferenceRoomType": conferenceRoom_data.ConferenceRoomType,
-            "ConferenceRoomName": conferenceRoom_data.ConferenceRoomName,
-            "Capacity": conferenceRoom_data.Capacity,
-            "isAvailable": conferenceRoom_data.isAvailable,
-            "imageUrl":conferenceRoom_data.imageUrl,
-            "timeSlots":[]
+            "building_name": conferenceRoom_data.building_name,
+            "floor": conferenceRoom_data.floor,
+            "conference_room_type": conferenceRoom_data.conference_room_type,
+            "conference_room_name": conferenceRoom_data.conference_room_name,
+            "capacity": conferenceRoom_data.capacity,
+            "is_available": conferenceRoom_data.is_available,
+            "image_url":conferenceRoom_data.image_url,
+            "time_slots":[]
         }
 
         result = self.clusterPageRepository._set_conference_room_by_fields(conference_room_dict, Cluster_ID)
@@ -54,7 +54,7 @@ class ClusterAdminPageService:
         return APIResponse(
             message="ConferenceRoom Fetch Success",
             error="",
-            data={"Buildings":buildings["Buildings"]}
+            data={"buildings":buildings["buildings"]}
         )
     
     def delete_cluster_conferenceroom(self,Room_ID:int,Cluster_ID:str) -> APIResponse:
@@ -74,14 +74,14 @@ class ClusterAdminPageService:
     def update_cluster_conferenceroom(self, conferenceRoom_data: ConferenceRoom, Cluster_ID: str) -> APIResponse:
         conference_room_dict = {
             "id": conferenceRoom_data.id,
-            "BuildingName": conferenceRoom_data.BuildingName,
-            "Floor": conferenceRoom_data.Floor,
-            "ConferenceRoomType": conferenceRoom_data.ConferenceRoomType,
-            "ConferenceRoomName": conferenceRoom_data.ConferenceRoomName,
-            "Capacity": conferenceRoom_data.Capacity,
-            "isAvailable": conferenceRoom_data.isAvailable,
-            "imageUrl":conferenceRoom_data.imageUrl,
-            "timeSlots":[]
+            "building_name": conferenceRoom_data.building_name,
+            "floor": conferenceRoom_data.floor,
+            "conference_room_type": conferenceRoom_data.conference_room_type,
+            "conference_room_name": conferenceRoom_data.conference_room_name,
+            "capacity": conferenceRoom_data.capacity,
+            "is_available": conferenceRoom_data.is_available,
+            "image_url":conferenceRoom_data.image_url,
+            "time_slots":[]
         }
 
         result = self.clusterPageRepository._update_conference_room_by_fields(conference_room_dict, Cluster_ID)

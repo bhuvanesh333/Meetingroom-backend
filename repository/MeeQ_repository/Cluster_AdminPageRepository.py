@@ -11,8 +11,8 @@ class ClusterPageRepository:
     def _get_all_building_id(self, Cluster_ID: str):
         try:
             cluster = self.conferenceRoom_collection.find_one(
-                {"Cluster_ID": Cluster_ID},
-                {"Buildings.id": 1}
+                {"cluster_id": Cluster_ID},
+                {"buildings.id": 1}
             )
             if not cluster:
                 raise HTTPException(status_code=404, detail="Cluster not found")
@@ -23,8 +23,8 @@ class ClusterPageRepository:
     def _get_all_building(self,Cluster_ID: str):
         try:
             cluster = self.conferenceRoom_collection.find_one(
-                {"Cluster_ID": Cluster_ID},
-                {"Buildings": 1}
+                {"cluster_id": Cluster_ID},
+                {"buildings": 1}
             )
             if not cluster:
                 raise HTTPException(status_code=404, detail="Cluster not found")
@@ -34,9 +34,10 @@ class ClusterPageRepository:
         
     def _set_conference_room_by_fields(self, conferenceRoom_data: dict, Cluster_ID: str):
         try:
+            
             result = self.conferenceRoom_collection.update_one(
-                {"Cluster_ID": Cluster_ID},
-                {"$push": {"Buildings": conferenceRoom_data}}
+                {"cluster_id": Cluster_ID},
+                {"$push": {"buildings": conferenceRoom_data}}
             )
             if result.matched_count == 0:
                 raise HTTPException(status_code=404, detail="Cluster not found")
@@ -47,8 +48,8 @@ class ClusterPageRepository:
     def _update_conference_room_by_fields(self, conferenceRoom_data: dict, Cluster_ID: str):
         try:
             result = self.conferenceRoom_collection.update_one(
-                {"Cluster_ID": Cluster_ID,"Buildings.id": conferenceRoom_data["id"]}, 
-                {"$set": {"Buildings.$": conferenceRoom_data}}
+                {"cluster_id": Cluster_ID,"buildings.id": conferenceRoom_data["id"]}, 
+                {"$set": {"buildings.$": conferenceRoom_data}}
             )
             if result.matched_count == 0:
                 raise HTTPException(status_code=404, detail="Cluster not found")
@@ -59,8 +60,8 @@ class ClusterPageRepository:
     def _delete_building_by_Room_Id(self,Room_ID:int,Cluster_ID:str):
         try:
             result = self.conferenceRoom_collection.update_one(
-                {"Cluster_ID": Cluster_ID}, 
-                { "$pull": { "Buildings": { "id": Room_ID } } }
+                {"cluster_id": Cluster_ID}, 
+                { "$pull": { "buildings": { "id": Room_ID } } }
             )
             if result.matched_count == 0:
                 raise HTTPException(status_code=404, detail="Cluster not found")
@@ -71,8 +72,8 @@ class ClusterPageRepository:
     def _update_building_roomstatus(self,Room_ID:int,Cluster_ID:str,room_status):
         try:
             result = self.conferenceRoom_collection.update_one(
-                {"Cluster_ID": Cluster_ID,"Buildings.id": Room_ID}, 
-                {"$set": {"Buildings.$.isAvailable": room_status["isAvailable"]} }
+                {"cluster_id": Cluster_ID,"buildings.id": Room_ID}, 
+                {"$set": {"buildings.$.is_available": room_status["is_available"]} }
             )
             if result.matched_count == 0:
                 raise HTTPException(status_code=404, detail="Cluster not found")

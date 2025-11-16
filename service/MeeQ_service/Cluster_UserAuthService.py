@@ -22,9 +22,9 @@ class ClusterUserAuthService:
                     "username": userLoginCredential.username,
                     "password": userLoginCredential.password
                 }
-            elif userLoginCredential.email != "":
+            elif userLoginCredential.email_id != "":
                 cred_dict = {
-                    "emailID": userLoginCredential.email,
+                    "email_id": userLoginCredential.email_id,
                     "password": userLoginCredential.password
                 }
             
@@ -47,8 +47,8 @@ class ClusterUserAuthService:
             
             response = {
                 "_id":result["_id"],
-                "Cluster_ID":result["Cluster_ID"],
-                "emailID":result["emailID"],
+                "cluster_id":result["cluster_id"],
+                "email_id":result["email_id"],
                 "fullname":result["fullname"],
                 "username":result["username"],
             }
@@ -66,7 +66,7 @@ class ClusterUserAuthService:
         
     def signup_cluster_user(self, userSignupCredential: UserSignupCredential) -> APIResponse:
         try:
-            cred_dict = {"Cluster_ID": userSignupCredential.clusterId}
+            cred_dict = {"cluster_id": userSignupCredential.cluster_id}
             result = self.clusterAdminRepository._get_cluster_admin_by_fields(cred_dict)
             
             if result is None:
@@ -84,7 +84,7 @@ class ClusterUserAuthService:
                     detail="Username already exists"
                 )
             
-            cred_dict = {"emailID": userSignupCredential.emailId}
+            cred_dict = {"email_id": userSignupCredential.email_id}
             result = self.clusterUserRepository._get_cluster_user_by_fields(cred_dict)
             
             if result is not None:
@@ -93,8 +93,8 @@ class ClusterUserAuthService:
                     detail="Email ID already exists"
                 )
             
-            cred_dict = {"Cluster_ID": userSignupCredential.clusterId,
-                         "emailID":userSignupCredential.emailId,
+            cred_dict = {"cluster_id": userSignupCredential.cluster_id,
+                         "email_id":userSignupCredential.email_id,
                          "password":userSignupCredential.password,
                          "username":userSignupCredential.username,
                          "fullname":userSignupCredential.fullname,

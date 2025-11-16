@@ -12,8 +12,8 @@ class ClusterAdminAuthService:
     def login_cluster_admin(self, login_credential: LoginCredential) -> APIResponse:
         try:
             creds_dict = {
-                "Cluster_ID": login_credential.clusterId,
-                "Cluster_Password": login_credential.password
+                "cluster_id": login_credential.cluster_id,
+                "password": login_credential.password
             }
             result = self.clusterAdminRepository._get_cluster_admin_by_fields(creds_dict)
             
@@ -26,7 +26,7 @@ class ClusterAdminAuthService:
             return APIResponse(
                 message="Login successful",
                 error="",
-                data = login_credential.clusterId
+                data = login_credential.cluster_id
             )
             
         except HTTPException:
@@ -40,7 +40,7 @@ class ClusterAdminAuthService:
     def signup_cluster_admin(self, signup_credential: SignupCredential) -> APIResponse:
         try:
             existing_cluster = self.clusterAdminRepository._get_cluster_admin_by_fields({
-                "Cluster_ID": signup_credential.clusterId
+                "cluster_id": signup_credential.cluster_id
             })
             if existing_cluster:
                 raise HTTPException(
@@ -49,7 +49,7 @@ class ClusterAdminAuthService:
                 )
             
             existing_email = self.clusterAdminRepository._get_cluster_admin_by_fields({
-                "emailID": signup_credential.emailId
+                "email_id": signup_credential.email_id
             })
             if existing_email:
                 raise HTTPException(
@@ -58,11 +58,11 @@ class ClusterAdminAuthService:
                 )
 
             creds_dict = {
-                "Cluster_ID": signup_credential.clusterId,
-                "Cluster_Password": signup_credential.password,
-                "adminName": signup_credential.adminName,
-                "emailID": signup_credential.emailId,
-                "organizationName": signup_credential.organizationName
+                "cluster_id": signup_credential.cluster_id,
+                "password": signup_credential.password,
+                "admin_name": signup_credential.admin_name,
+                "email_id": signup_credential.email_id,
+                "organization_name": signup_credential.organization_name
             }
             
             result = self.clusterAdminRepository._set_cluster_admin_by_fields(creds_dict)
@@ -74,8 +74,8 @@ class ClusterAdminAuthService:
                 )
             
             creds_dict = {
-                "Cluster_ID": signup_credential.clusterId,
-                "Buildings":[]
+                "cluster_id": signup_credential.cluster_id,
+                "buildings":[]
             }
 
             result=self.clusterAdminRepository.create_conference_room(creds_dict)
@@ -102,7 +102,7 @@ class ClusterAdminAuthService:
     def clusterIdCheck(self, clusterid: str) -> APIResponse:
         try:
             result = self.clusterAdminRepository._get_cluster_admin_by_fields({
-                "Cluster_ID": clusterid
+                "cluster_id": clusterid
             })
             available = not bool(result)
             return APIResponse(
