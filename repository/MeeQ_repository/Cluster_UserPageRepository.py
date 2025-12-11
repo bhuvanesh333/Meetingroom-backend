@@ -1,3 +1,4 @@
+from bson import ObjectId
 from database.dataBase_Initializer import ConferenceRoom_collection
 from fastapi import HTTPException
 from pymongo.errors import PyMongoError
@@ -9,6 +10,23 @@ class ClusterUserPageRepository:
     def __init__(self):
         self.conferenceRoom_collection = ConferenceRoom_collection
 
+    def _get_all_Conference_room(self):
+        try:
+            result = self.conferenceRoom_collection.find()
+            return result
+        except PyMongoError as e:
+            raise HTTPException(status_code=500, detail=f"Database error: {str(e)}")
+        
+    def delete_time_slot(self,cluster_id:str,timeslot_id:int):
+        try:
+            result = self.conferenceRoom_collection.update_one(
+            { "cluster_id": cluster_id },
+            { "$pull": { "buildings.$[].time_slots": { "id": timeslot_id } } }
+        )
+            return result
+        except PyMongoError as e:
+            raise HTTPException(status_code=500, detail=f"Database error: {str(e)}")
+        
     def _get_all_booking_list(self,Cluster_ID:str):
         try:
             result = self.conferenceRoom_collection.find_one({"cluster_id": Cluster_ID},  
@@ -24,8 +42,6 @@ class ClusterUserPageRepository:
                 {"cluster_id": Cluster_ID, "buildings.id": int(Building_ID)},
                 {"buildings.$": 1}
             )
-            print("cluster : ")
-            print(cluster["buildings"][0])
             if not cluster:
                 raise HTTPException(status_code=404, detail="Cluster or Building not found")
             return cluster["buildings"][0]  # Return the specific building document

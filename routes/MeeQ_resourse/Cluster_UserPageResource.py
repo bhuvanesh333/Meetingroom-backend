@@ -28,11 +28,16 @@ class ClusterUserPageResourse:
     
     @cluster_user_page_resourse.put("/ClusterUserAddTimeSlot",response_model=APIResponse)
     def cluster_user_add_time_slot(self,timeSlot:TimeSlot,Cluster_ID: str = Header(..., alias="Cluster-ID"),Building_ID: str = Header(..., alias="X-Building-ID")):
+        if not Cluster_ID:
+            raise HTTPException(status_code=400, detail="Cluster-ID header is required")
+        return self.clusterUserPageService.add_time_slot(timeSlot, Cluster_ID, Building_ID)
+
+    @cluster_user_page_resourse.delete("/ClusterUserDeleteTimeSlot",response_model=APIResponse)
+    def cluster_user_delete_time_slot(self,TimeSlot_ID: int = Header(..., alias="Timeslot-ID"),Cluster_ID: str = Header(..., alias="Cluster-ID")):
             if not Cluster_ID:
                 raise HTTPException(status_code=400, detail="Cluster-ID header is required")
-            return self.clusterUserPageService.add_time_slot(timeSlot, Cluster_ID, Building_ID)
-
-
+            return self.clusterUserPageService.delete_time_slot(TimeSlot_ID, Cluster_ID)
+    
     # Generator function to stream events
     def event_stream(self, cluster_id: str, room_id: str):
         while True:

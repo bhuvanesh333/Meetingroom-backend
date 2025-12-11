@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from typing import Optional
 
 # ---------------------------------- Cluster User Login ------------------------------------
@@ -16,4 +16,13 @@ class UserSignupCredential(BaseModel):
     email_id:str
     cluster_id:str
     password:str
+
+#------------------------------------ ClusterUserData ----------------------------------------
+
+class ClusterUserData(BaseModel):
+    id: str = Field(alias="_id")
+    cluster_id: str
+    email_id: str
+    fullname: str
+    username: str
     

@@ -1,4 +1,5 @@
 
+from datetime import datetime, timezone
 import random
 import time
 from fastapi import Depends, HTTPException, status
@@ -27,8 +28,24 @@ class ClusterUserPageService:
             new_id = random.randint(1000, 9999)
             if new_id not in ids:
                 return new_id
-            
+
+    def validate_time_slot(self, timeSlot: TimeSlot):
+        now = datetime.now()
+        fake_utc_now = now.replace(tzinfo=timezone.utc)
+        if(fake_utc_now.timestamp()-60 > timeSlot.start_time.timestamp() or fake_utc_now.timestamp()-60 > timeSlot.end_time.timestamp()):
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Invalid Time Slot: start_time and end_time must be in the future"
+            )
+        
+        if timeSlot.start_time >= timeSlot.end_time:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Invalid Time Slot: start_time must be before end_time"
+            )     
+        
     def add_time_slot(self, timeSlot: TimeSlot, Cluster_ID: str, Building_ID: str) -> APIResponse:
+        self.validate_time_slot(timeSlot)
         timeSlot.id = self.gen_random_id(Cluster_ID,Building_ID)
         result = self.clusterUserPageRepository._add_time_slot(timeSlot, Cluster_ID, Building_ID)
         if not result:
@@ -62,3 +79,11 @@ class ClusterUserPageService:
                 "message": f"Internal server error: {str(e)}",
                 "timestamp": time.strftime('%H:%M:%S')
             }
+    def delete_time_slot(self, TimeSlot_ID: int, Cluster_ID: str) -> APIResponse:
+        result = self.clusterUserPageRepository.delete_time_slot(Cluster_ID, TimeSlot_ID)
+        if not result:
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="Failed to Delete Time Slot"
+            )
+        return APIResponse(message="Time Slot deleted successfully", error="", data=result.modified_count)

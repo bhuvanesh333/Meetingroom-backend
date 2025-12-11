@@ -2,7 +2,7 @@
 from fastapi_utils.cbv import cbv
 from fastapi import APIRouter, Depends
 
-from schema.clusterUserAuthSchema import UserLoginCredential, UserSignupCredential
+from schema.clusterUserAuthSchema import ClusterUserData, UserLoginCredential, UserSignupCredential
 from schema.commonSchema import APIResponse
 from service.MeeQ_service.Cluster_UserAuthService import ClusterUserAuthService
 
@@ -23,3 +23,7 @@ class ClusterUserAuthResourse:
     @cluster_user_auth_resourse.post("/ClusterUserSignup",response_model=APIResponse)
     def cluster_user_signup(self,user_signup_credential: UserSignupCredential):
         return self.clusterUserAuthService.signup_cluster_user(user_signup_credential)
+    
+    @cluster_user_auth_resourse.post("/ClusterUserLogout",response_model=APIResponse)
+    def cluster_user_logout(self,cluster_user_data: ClusterUserData):
+        return self.clusterUserAuthService.logout_cluster_user(cluster_user_data)
