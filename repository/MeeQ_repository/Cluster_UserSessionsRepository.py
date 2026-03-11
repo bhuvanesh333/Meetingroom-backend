@@ -30,7 +30,7 @@ class ClusterUserSessionsRepository:
         try:
             userSession = user_Session(user_id=user_id,
                                        session_token=session_token,
-                                       is_active=True,
+                                       is_online=True,
                                        expire_at=datetime.now(timezone.utc)+timedelta(hours=1,days=2), # set by common config FIXME
                                        last_accessed=datetime.now(timezone.utc)).model_dump()
             
@@ -39,14 +39,14 @@ class ClusterUserSessionsRepository:
         except PyMongoError as e:
             raise HTTPException(status_code=500, detail=f"Database error: {str(e)}")
         
-    def _update_user_session(self,user_id,session_token,is_active:bool):
+    def _update_user_session(self,user_id,session_token,is_online:bool):
         try:
             expire_at = datetime.now(timezone.utc)
-            if is_active:
+            if is_online:
                 expire_at = datetime.now(timezone.utc)+timedelta(hours=1,days=2)
             userSession = user_Session(user_id=user_id,
                                        session_token=session_token,
-                                       is_active=is_active,
+                                       is_online=is_online,
                                        expire_at=expire_at, # set by common config FIXME
                                        last_accessed=datetime.now(timezone.utc)).model_dump()
             

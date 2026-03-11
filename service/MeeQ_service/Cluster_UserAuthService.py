@@ -15,15 +15,15 @@ class ClusterUserAuthService:
 
     def __init__(self,clusterUserRepository:ClusterUserRepository = Depends(),
                  clusterAdminRepository: ClusterAdminRepository = Depends(),
-                 clusterUserSessionsRepository:ClusterUserSessionsRepository = Depends(),):
+                 clusterUserSessionsRepository:ClusterUserSessionsRepository = Depends()):
         self.clusterUserRepository = clusterUserRepository
         self.clusterAdminRepository = clusterAdminRepository
         self.clusterUserSessionsRepository = clusterUserSessionsRepository
 
-    def set_active_status(self,user_id:str,is_active:bool):
-        result = self.clusterUserRepository._set_active_status(user_id,is_active)
+    def set_active_status(self,user_id:str,is_online:bool):
+        result = self.clusterUserRepository._set_active_status(user_id,is_online)
         if result>0:
-            return APIResponse(message="Active status updated successfully", error="", data=result)
+            return True
         raise HTTPException(
                     status_code=status.HTTP_304_NOT_MODIFIED,
                     detail="Not Modified"
@@ -135,6 +135,7 @@ class ClusterUserAuthService:
                          "password":userSignupCredential.password,
                          "username":userSignupCredential.username,
                          "fullname":userSignupCredential.fullname,
+                         "role":userSignupCredential.role,
                          "approval":False,
                          "approval_req_time":datetime.now(timezone.utc),
                          "approval_grant_time":datetime.now(timezone.utc),

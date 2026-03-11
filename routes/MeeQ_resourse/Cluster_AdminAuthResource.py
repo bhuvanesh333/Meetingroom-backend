@@ -26,4 +26,4 @@ class ClusterAdminAuthResourse:
 
     @cluster_admin_auth_resourse.post("/ClusterIdCheck",response_model=APIResponse)
     def cluster_id_check(self, request: ClusterIdCheckRequest):
-        return self.clusterAdminAuthService.clusterIdCheck(request.clusterId)
+        return self.clusterAdminAuthService.clusterIdCheck(request.cluster_id)

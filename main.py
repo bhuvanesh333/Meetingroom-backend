@@ -8,9 +8,11 @@ from service.MeeQ_service.Scheduler.Cluster_UserScheduler import ClusterUserSche
 
 app=FastAPI()
 excluded_paths = {"/api/cluserUserAuth/ClusterUserLogin",
-                  "/api/cluserUserPage/stream",
+                  "/api/cluserUserPage/stream*",
                   "/api/cluserUserAuth/ClusterUserSignup",
-                  "/api/cluserAdminAuth/ClusterAdminLogin"}
+                  "/api/cluserAdminAuth/ClusterAdminLogin",
+                  "/api/cluserAdminAuth/ClusterIdCheck",
+                  "/api/cluserAdminAuth/ClusterAdminSignup"}
 
 try:
     app.add_middleware(

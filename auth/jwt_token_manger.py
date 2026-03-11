@@ -9,7 +9,7 @@ class JWTTokenManager:
     def __init__(self):
         self.secret_key = "this-is-a-fixed-secret-key-for-testing-32"
         self.algorithm = "HS256"
-        self.access_token_expire_minutes = 30
+        self.access_token_expire_minutes = 90
         self.refresh_token_expire_days = 7
 
         self.pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")

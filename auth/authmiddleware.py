@@ -8,6 +8,7 @@ from bson import ObjectId
 
 from auth.jwt_token_manger import token_manager_singleton
 from database.dataBase_Initializer import get_blacklisted_tokens, get_user_sessions  ,get_all_type_users
+from schema.commonSchema import ROLE
 
 class AuthMiddleware(BaseHTTPMiddleware):
     
@@ -18,12 +19,12 @@ class AuthMiddleware(BaseHTTPMiddleware):
 
     def user_find_by_id(self, user_id: str):
         cluster_admins,cluster_users = get_all_type_users()
-        cluster_admins_user = cluster_admins.find_one({"_id": ObjectId(user_id), "is_active": True})
+        cluster_admins_user = cluster_admins.find_one({"_id": ObjectId(user_id), "is_online": True})
         if cluster_admins_user:
-            return cluster_admins_user
-        cluster_users_user = cluster_users.find_one({"_id": ObjectId(user_id), "is_active": True})
+            return cluster_admins_user,ROLE.CLUSTER_ADMIN
+        cluster_users_user = cluster_users.find_one({"_id": ObjectId(user_id), "is_online": True})
         if cluster_users_user:
-            return cluster_users_user
+            return cluster_users_user,ROLE.CLUSTER_USER
     
     async def dispatch(self, request: Request, call_next)-> JSONResponse:
         """
@@ -32,7 +33,6 @@ class AuthMiddleware(BaseHTTPMiddleware):
         # Skip authentication for public paths
         if self._is_public_path(request):
             return await call_next(request)
-        
         
         try:
             # Step 1: Extract and validate token
@@ -62,7 +62,7 @@ class AuthMiddleware(BaseHTTPMiddleware):
                 return self._unauthorized_response("Invalid token payload")
             
             # Step 6: Verify user exists and is active
-            user = self.user_find_by_id(user_id)
+            user,role = self.user_find_by_id(user_id)
             
             if not user:
                 return self._unauthorized_response("User not found or inactive")
@@ -71,7 +71,7 @@ class AuthMiddleware(BaseHTTPMiddleware):
             session = get_user_sessions().find_one({
                 "user_id": user_id,
                 "session_token": self.token_manager.hash_token(session_token),
-                "is_active": True,
+                "is_online": True,
                 "expire_at": {"$gt": datetime.now(timezone.utc)}
             })
             
@@ -85,13 +85,23 @@ class AuthMiddleware(BaseHTTPMiddleware):
             )
             
             # Step 9: Add user context to request state
-            request.state.user = {
+            if role == ROLE.CLUSTER_ADMIN:
+                request.state.user = {
+                "id": str(user["_id"]),
+                "admin_name": user["admin_name"],
+                "email": user["email_id"],
+                "role": role,
+                "session_token": session_token
+            }
+            elif role == ROLE.CLUSTER_USER:
+                request.state.user = {
                 "id": str(user["_id"]),
                 "username": user["username"],
                 "email": user["email_id"],
-                "role": "cluster_user",# user["role"], # need to add Role
+                "role": role,
                 "session_token": session_token
             }
+
             
             # Step 10: Check authorization for protected routes
             if not self._is_authorized(request, user):

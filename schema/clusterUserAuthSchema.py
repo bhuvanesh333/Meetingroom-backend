@@ -1,6 +1,8 @@
 from pydantic import BaseModel, Field
 from typing import Optional
 
+from schema.commonSchema import ROLE
+
 # ---------------------------------- Cluster User Login ------------------------------------
 
 class UserLoginCredential(BaseModel):
@@ -16,6 +18,7 @@ class UserSignupCredential(BaseModel):
     email_id:str
     cluster_id:str
     password:str
+    role: ROLE
 
 #------------------------------------ ClusterUserData ----------------------------------------
 

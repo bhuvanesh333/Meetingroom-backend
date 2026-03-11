@@ -8,11 +8,11 @@ class ClusterUserRepository:
     def __init__(self):
         self.clusteruser_auth_collection = Clusteruser_auth_collection
 
-    def _set_active_status(self,user_id:str,is_active:bool):
+    def _set_active_status(self,user_id:str,is_online:bool):
         try:
             result = self.clusteruser_auth_collection.update_one(
                 {"_id": ObjectId(user_id)},
-                {"$set": {"is_active": is_active}}
+                {"$set": {"is_online": is_online}}
             )
             return result.modified_count
         except PyMongoError as e:
